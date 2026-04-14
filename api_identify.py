@@ -5,12 +5,14 @@ Created on Mon Apr 13 21:55:50 2026
 
 @author: loganbattaglia
 
-#Demonstrate use of Anthropic's API for Claude. Requires
+#Use Anthropic's API for Claude to classify work descriptions. Requires
 installation of the anthropic module via:
 
     conda install anthropic -c conda-forge.
 
 """
+
+#  Initial setup, import needed modules
 
 import pandas as pd
 from anthropic import Anthropic
@@ -18,27 +20,21 @@ from pydantic import BaseModel
 import os
 import sys
 
-#============================================================
-#  Initial setup
-#============================================================
+#  List file names at the top of scripts 
 
-#
-#  List file names at the top of scripts so future readers
-#  don't have to hunt for them in the code
-#
 #     apikey_file = contains the Claude API key
-#     input_file  = raw data from NHTSA
-#     column_file = NHTSA's column names and descriptions
+#     input_file  = raw data from Chicago building permits
+#     column_file = building permit column names and descriptions
 #     output_file = where the results should go
-#
+
 
 apikey_file = 'claude_apikey.txt'
 input_file  = 'chicago_building_permits.csv'
-column_file = 'column-names.csv'
-output_file = 'parsed-complaints.xlsx'
+column_file = 'chicago_building_permits_metadata.csv'
+output_file = 'chicago_permits_parsed.xlsx'
 
 #
-#  Define a pydantic object for returing data from Claude.
+#  Define a pydantic object for returning data from Claude.
 #
 #  The definition gives a list of attributes the object will
 #  have along with the data types of the values of the
@@ -51,19 +47,18 @@ output_file = 'parsed-complaints.xlsx'
 #  values.
 #
 
-class ComplaintInfo(BaseModel):
-    safety: str            # safety tag
-    system: str            # system tag
-    timing: str            # timing tag
-    notes: str             # optional notes field
-    tokens: dict[str,int]  # input and output tokens
+class PermitClassification(BaseModel):
+    work_category: str  
+    is_resilience_infrastructure: str 
+    notes: str
+    tokens: dict[str, int]
 
 #
 #  Load the API key
 #
 
-if os.path.exists('apikey.txt'):
-    with open('apikey.txt') as fh:
+if os.path.exists('claude_apikey.txt'):
+    with open('claude_apikey.txt') as fh:
         apikey = fh.readline().strip()
 else:
     print('error: Anthropic API key not found')
@@ -84,58 +79,51 @@ model = "claude-sonnet-4-6"
 p_in = 3/1e6
 p_out = 15/1e6
 
-#%%
 #============================================================
 #  Read the raw data and pick a sample to examine
 #============================================================
 
-#
-#  Read the raw data. It's in tab-separated format within
-#  the zip file, and the columns don't have headers.
-#
-#  The column names and descriptions are stored in a separate
-#  file. Read that first so the names can be used when reading
-#  the actual data.
-#
+#  Read the raw data
 
 cols = pd.read_csv(column_file)
 
-raw = pd.read_csv(input_file,
-                  sep='\t',            # data separated by tabs
-                  names=cols['name'],  # use for column names
-                  dtype=str)           # leave everything as str
+raw = pd.read_csv(input_file)
 
 print('Records read',len(raw))
 
 #
-#  Pick a random sample of vehicles. There may be more than one
-#  record per vehicle so draw the sample from the VINs.
+#  Pick a random sample of permits. There may be more than one
+#  record per address so draw the sample from the IDs.
 #
 #  The random_state parameter initializes the random number
 #  generator. It's useful for testing because it ensures that
 #  the same sequence of random rows is chosen each time.
 #
 
-vins = raw['VIN'].drop_duplicates()
-vins = vins.sample(frac=0.001,random_state=789)
+ids = raw['id'].drop_duplicates()
+ids = ids.sample(frac=0.001,random_state=788)
 
-print('VINs selected',len(vins))
+print('IDs selected',len(ids))
 
 #
 #  Now pick out the records for those vehicles
 #
 
-sample = raw[ raw['VIN'].isin(vins) ]
+sample = raw[ raw['id'].isin(ids) ]
 
 print('Records retained',len(sample))
 
-#%%
 #============================================================
 #  Define a function for sending requests to the model
 #============================================================
 
 def ask(client,model,prompt,txt,apikey):
 
+    # Guard against NaN/None coming in
+    
+    if not isinstance(txt, str):
+       txt = ""
+       
     #  clean up spacing
 
     tidy = ' '.join(txt.split())
@@ -159,10 +147,8 @@ def ask(client,model,prompt,txt,apikey):
         #  system gives Claude a role, which improves performance
 
         system="""
-            You are an analyst examining complaints about vehicles
-            submitted to the National Highway Traffic Safety
-            Administration. Your goal is to classify the complaints
-            into broad categories.
+            You are an analyst examining building permits submitted to the City of Chicago. Your goal is to classify the building permits
+            into broad categories and identify whether or not they involve climate resilient infrastructure development.
         """,
 
         #  messages gives one or more specific questions
@@ -175,9 +161,9 @@ def ask(client,model,prompt,txt,apikey):
         ],
 
         #  output_format indicates that the output should be in
-        #  the form of a ComplaintInfo object
+        #  the form of a PermitClassification object
 
-        output_format = ComplaintInfo,
+        output_format = PermitClassification,
 
     )
 
@@ -208,23 +194,21 @@ def ask(client,model,prompt,txt,apikey):
 #
 
 prompt = '''
-This text is a complaint <text>{}</text>.
+This text is a building permit work description <text>{}</text>.
 
-Determine three tags for each complaint: safety, system, and timing.
+Determine a category for each complaint: safety, system, and timing.
 Safety indicates that the complaint could result in an accident while
 the vehicle is moving. System indicates what vehicle system is affected.
 Timing indicates whether it happened suddenly or has been long standing.
 
 <instructions>
-The safety tag should be either "yes", "no", or "other".
+The is_resilience_infrastructure tag should be either "yes", "no", or "other".
 
-The system tag should be "engine", "transmission", "brakes",
-"electrical", "steering" or "body". If none of those tags are
+If the is_resilience_infrastructure tag is "no", leave the work_category tag blank.
+
+If the is_resilience_infrastructure tag is "yes", the work_category tag should be "energy generation", "heating and cooling efficiency", "water management",
+"building envelope", "electric transition" or "green space". If none of those tags are
 appropriate, use "other".
-
-The timing tag should be "acute" if the issue happened suddenly;
-"chronic" if the problem has been long standing, or "other" if
-neither of those are appropriate.
 
 If the classifications are clear, return the tags and leave the notes
 field blank. If any tag is ambiguous or "other", include a brief
@@ -258,8 +242,8 @@ for idx,rec in sample.iterrows():
 
     #  get the ID and description fields
 
-    cid = rec['CMPLID']
-    txt = rec['CDESCR']
+    pid = rec['id']
+    txt = rec['work_description']
 
     #  make the request
 
@@ -268,7 +252,7 @@ for idx,rec in sample.iterrows():
     #  print a message so the user can see what's going on
 
     print('\nRequest:\n')
-    print(' '.join(txt.split()))
+    print(' '.join(txt.split()) if isinstance(txt, str) else "(no description)")
     print()
     print(res)
 
@@ -276,10 +260,9 @@ for idx,rec in sample.iterrows():
     #  joining onto the original data.
 
     data.append({
-        'CMPLID':cid,
-        'safety':res.safety,
-        'system':res.system,
-        'timing':res.timing,
+        'id':pid,
+        'is_resilience':res.is_resilience_infrastructure,
+        'work_category':res.work_category,
         'notes':res.notes,
         'tokens_i':res.tokens['in'],
         'tokens_o':res.tokens['out']
@@ -306,7 +289,7 @@ results['cost'] = p_in*results['tokens_i'] + p_out*results['tokens_o']
 #
 
 merged = sample.merge(results,
-                      on='CMPLID',
+                      on='id',
                       how='inner',
                       validate='1:1')
 
@@ -316,16 +299,25 @@ merged = sample.merge(results,
 #
 
 keep_cols = [
-    'CMPLID',
-    'MAKETXT',
-    'MODELTXT',
-    'COMPDESC',
-    'CDESCR',
-    'safety',
-    'system',
-    'timing',
-    'notes',
-    'cost',
+    "id",
+    "permit_",
+    "permit_type",
+    "application_start_date",
+    "issue_date",
+    "street_number",
+    "street_name",
+    "work_type",
+    "work_description",
+    "subtotal_waived",
+    "total_fee",
+    "census_tract",
+    "ward",
+    "xcoordinate",
+    "ycoordinate",
+    "is_resilience",
+    "work_category",
+    "notes",
+    "cost"
     ]
 
 trim = merged[keep_cols]

@@ -1,0 +1,16 @@
+fieldName,label,dataTypeName,description
+id,ID,text,Unique database record identifier
+permit_,PERMIT#,text,Tracking number assigned at beginning of permit application process
+permit_type,PERMIT_TYPE,text,Type of permit
+application_start_date,APPLICATION_START_DATE,calendar_date,Date when City began reviewing permit application
+issue_date,ISSUE_DATE,calendar_date,"For most permit types, date when City determined permit was ready to issue, subject to payment of permit fees; For Express Permit Program, date when permit issued based on full payment of applicable permit fee"
+street_number,STREET_NUMBER,number,"Address number - for buildings with address ranges, primary address is used"
+street_name,STREET_NAME,text,Street name
+work_type,WORK_TYPE,text,Classification of activity authorized by permit (not available for all permit types).
+work_description,WORK_DESCRIPTION,text,Description of work authorized by the permit
+subtotal_waived,SUBTOTAL_WAIVED,number,"Sum of BUILDING_FEE_WAIVED, ZONING_FEE_WAIVED and OTHER_FEE_WAIVED"
+total_fee,TOTAL_FEE,number,"Sum of SUBTOTAL_PAID, SUBTOTAL_UNPAID and SUBTOTAL_WAIVED"
+census_tract,CENSUS_TRACT,number,The census tract of the property's primary address. The census tract map is available in a separate dataset.
+ward,WARD,number,The ward (city council district) of the property's primary address at the time of permit issuance. The ward map is available in a separate dataset.
+xcoordinate,XCOORDINATE,number,"The east-west coordinate of the property's primary address, defined in feet, based on NAD 83 - State Plane Eastern IL"
+ycoordinate,YCOORDINATE,number,"The north-south coordinate of the property's primary address, defined in feet, based on NAD 83 - State Plane Eastern IL"

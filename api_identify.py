@@ -196,10 +196,6 @@ def ask(client,model,prompt,txt,apikey):
 prompt = '''
 This text is a building permit work description <text>{}</text>.
 
-Determine a category for each complaint: safety, system, and timing.
-Safety indicates that the complaint could result in an accident while
-the vehicle is moving. System indicates what vehicle system is affected.
-Timing indicates whether it happened suddenly or has been long standing.
 
 <instructions>
 The is_resilience_infrastructure tag should be either "yes", "no", or "other".

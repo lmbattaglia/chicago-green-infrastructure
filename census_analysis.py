@@ -92,7 +92,7 @@ geo_clip = geo_clip.drop(columns=[c for c in cols_to_drop if c in geo_clip.colum
 
 # Export all three layers to a single geopackage
 
-gpkg_path = "chicago.gpkg"
+gpkg_path = "Data/Geodata/chicago.gpkg"
 boundary.to_file(gpkg_path, layer="city_boundary", driver="GPKG")
 geo_clip.to_file(gpkg_path, layer="census_tracts", driver="GPKG")
 tract_centroids = geo_clip[['GEOID', 'permit_count']].copy()

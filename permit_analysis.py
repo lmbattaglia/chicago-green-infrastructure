@@ -9,6 +9,7 @@ Created on Thu Apr 16 17:43:40 2026
 # Import needed modules
 
 import pandas as pd
+import geopandas as gpd
 import matplotlib.pyplot as plt
 import numpy as np
 import os
@@ -266,3 +267,27 @@ os.makedirs("Data/Permit Data", exist_ok=True)
 is_solar_permits.to_csv("Data/Permit Data/solar_permits.csv", index=False)
 is_flood_permits.to_csv("Data/Permit Data/flood_permits.csv", index=False)
 is_green_permits.to_csv("Data/Permit Data/green_permits.csv", index=False)
+
+# Save permit data as geopandas
+
+utm18n = 26918
+
+def load_permit_geodataframe(df):
+    df = df.dropna(subset=["xcoordinate", "ycoordinate"])
+    gdf = gpd.GeoDataFrame(
+        df,
+        geometry=gpd.points_from_xy(df["xcoordinate"], df["ycoordinate"]),
+        crs="EPSG:3435"
+    ).to_crs(epsg=utm18n)
+    return gdf
+
+solar_geo = load_permit_geodataframe(is_solar_permits)
+flood_geo = load_permit_geodataframe(is_flood_permits)
+green_geo = load_permit_geodataframe(is_green_permits)
+
+os.makedirs("Data/Geodata", exist_ok=True)
+gpkg_path = "Data/Geodata/permits.gpkg"
+
+solar_geo.to_file(gpkg_path, layer="solar", driver="GPKG")
+flood_geo.to_file(gpkg_path, layer="flood", driver="GPKG")
+green_geo.to_file(gpkg_path, layer="green", driver="GPKG")

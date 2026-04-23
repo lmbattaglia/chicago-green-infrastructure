@@ -185,6 +185,33 @@ def plot_permit_trend(permit_flag, permits_df):
             ha='center',
             fontsize=7
         )
+        
+    if permit_flag == 'is_solar':
+        years = list(year_counts.index)
+
+        if 2016 in years:
+            x_feja = years.index(2016) - 0.5
+            ax.axvline(x=x_feja, color='black', linewidth=1.5, linestyle='--')
+            ax.text(
+                x_feja - 0.1,
+                year_counts.max() * 0.98,
+                'Future Energy\nJobs Act passed',
+                ha='right', va='top',
+                fontsize=8, color='black',
+                style='italic'
+            )
+
+        if 2019 in years:
+            x_isfa = years.index(2019) - 0.5
+            ax.axvline(x=x_isfa, color='black', linewidth=1.5, linestyle='--')
+            ax.text(
+                x_isfa - 0.1,
+                year_counts.max() * 0.98,
+                'Illinois Solar for\nAll implemented',
+                ha='right', va='top',
+                fontsize=8, color='black',
+                style='italic'
+            )
     ax.set_ylim(0, year_counts.max() * 1.15) 
     ax.set_ylim(0, year_counts.max() * 1.05)
     ax.set_title(cfg['title'], fontsize=13, pad=12)
@@ -245,13 +272,37 @@ for i, (year, count) in enumerate(stacked['total'].items()):
         ha='center',
         fontsize=7
     )
+years = list(stacked.index)
+
+if 2016 in years:
+    x_feja = years.index(2016) - 0.5
+    ax.axvline(x=x_feja, color='black', linewidth=1.5, linestyle='--')
+    ax.text(
+        x_feja - 0.1,
+        stacked['total'].max() * 0.98,
+        'Future Energy\nJobs Act passed',
+        ha='right', va='top',
+        fontsize=8, color='black',
+        style='italic'
+    )
+
+if 2019 in years:
+    x_isfa = years.index(2019) - 0.5
+    ax.axvline(x=x_isfa, color='black', linewidth=1.5, linestyle='--')
+    ax.text(
+        x_isfa - 0.1,
+        stacked['total'].max() * 0.98,
+        'Illinois Solar for\nAll implemented',
+        ha='right', va='top',
+        fontsize=8, color='black',
+        style='italic'
+    )
 ax.set_title('Climate Resilient Infrastructure Permits by Year in Chicago (2006-2025)', fontsize=13, pad=12)
 ax.set_xlabel('Year', fontsize=10)
 ax.set_ylabel('Number of Permits Issued', fontsize=10)
 ax.tick_params(axis='x', rotation=45)
 ax.legend(title='Permit Type', fontsize=9, title_fontsize=9)
 ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{int(x):,}'))
-ax.grid(axis='y', linestyle='--', alpha=0.4)
 
 plt.tight_layout()
 plt.savefig("Visualizations/climate_permits_stacked_by_year.png", dpi=150, bbox_inches='tight')

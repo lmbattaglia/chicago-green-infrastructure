@@ -181,7 +181,7 @@ plt.tight_layout()
 plt.savefig('Visualizations/heatmap_wards_raw.png', dpi=150, bbox_inches='tight')   
 plt.show()
 
-# Create line chart of permit counts by year
+# Create bar chart of permit counts by year
 
 permits_by_year = permits_by_ward_year.groupby('issue_year')['permit_count'].sum().reset_index()
 
@@ -210,7 +210,6 @@ ax.set_ylabel('Total Permits', fontsize=10)
 ax.set_xticks(permits_by_year['issue_year'])
 ax.tick_params(axis='x', rotation=45)
 ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{int(x):,}'))
-ax.grid(axis='y', linestyle='--', alpha=0.5)
 ax.set_ylim(0, 55000) 
 
 plt.tight_layout()

@@ -7,3 +7,5 @@ password.txt
 username.txt
 chicago_building_permits.csv
 apikey.txt
+.DS_Store
+**/.DS_Store

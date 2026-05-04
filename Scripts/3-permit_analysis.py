@@ -241,6 +241,7 @@ stacked = pd.DataFrame({
 }).fillna(0).astype(int)
 
 stacked = stacked.sort_index()
+stacked.index = stacked.index.astype(int)
 stacked['total'] = stacked.sum(axis=1)
 
 # Plot stacked bar chart

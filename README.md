@@ -63,31 +63,43 @@ This is a QGIS project with layers for census tracts, permit counts, and demogra
 
 ## Results
 
-![Total Building Permits by Year]("../Visualizations/timeseries_total_permits.png")
+![Total Building Permits by Year]("Visualizations/timeseries_total_permits.png")
 
 This figure shows the total building permits by year. Permit requests peaked just before the recession in 2008 and the pandemic in 2020, when development was presumably at its highest volume. 
 
-![Average Building Permit Rate by Income Quartile]("../Visualizations/permit_rate_by_income_quartile.png")
+![Average Building Permit Rate by Income Quartile]("Visualizations/permit_rate_by_income_quartile.png")
 
 This figure shows the average permit rate per 1,000 residents based on income quartile of a census tract. The highest income quartile tracts have the highest average permit rate at 395.1 permits per 1,000 residents, but the lowest income quartile tracts have the second highest average permit rate at 292.2 permits per 1,000 residents.
 
-![Average Building Permit Rate by Racial Majority of Census Tract]("../Visualizations/permit_rate_by_race.png")
+![Average Building Permit Rate by Racial Majority of Census Tract]("Visualizations/permit_rate_by_race.png")
 
 This figure shows the average permit rate per 1,000 residents based on racial majority in a census tract. Mixed race tracts have the highest permit rate at 326.6 permits per 1,000 residents, while majority white and majority Black tracts follow closely behind at 313.1 and 310.4 permits per 1,000 residents respectively. Majority Asian and majority Hispanic tracts have much lower average permit rates.
 
-| ![Median Household Income vs Permit Rate by Census Tract]("../Visualizations/scatter_income_vs_permit_rate.png") | ![Median Household Income vs Permit Rate by Census Tract (without Outliers)]("../Visualizations/scatter_income_vs_permit_rate_no_outliers.png") |
-| ![Poverty Rate vs Permit Rate by Census Tract]("../Visualizations/scatter_poverty_vs_permit_rate.png") | ![Poverty Rate vs Permit Rate by Census Tract]("../Visualizations/scatter_poverty_vs_permit_rate_no_outliers.png") |
+| ![Median Household Income vs Permit Rate by Census Tract]("Visualizations/scatter_income_vs_permit_rate.png") | ![Median Household Income vs Permit Rate by Census Tract (without Outliers)]("Visualizations/scatter_income_vs_permit_rate_no_outliers.png") |
+| ![Poverty Rate vs Permit Rate by Census Tract]("Visualizations/scatter_poverty_vs_permit_rate.png") | ![Poverty Rate vs Permit Rate by Census Tract]("Visualizations/scatter_poverty_vs_permit_rate_no_outliers.png") |
 
 These figures are scatter plots showing the correlation between median household income and poverty rates with permit rates by census tract. The two figures on the left are skewed by outlier census tracts (highlighted in red) like those in the Financial District, so the two figures on the right show the plots with the 99th percentile outliers removed. It is easier to then see the clear positive correlation between median household income and permit rate.
 
-| ![Permit Rate by Census Tract]("../Visualizations/permit_rate_tracts.png") | ![Median Income by Census Tract]("../Visualizations/median_income_tracts.png")
+| ![Permit Rate by Census Tract]("Visualizations/permit_rate_tracts.png") | ![Median Income by Census Tract]("Visualizations/median_income_tracts.png")
 
-![Climate Resilient Building Permit Locations]("../Visualizations/climate_resilient_permits_map.png")
+These maps show the City of Chicago broken down by census tract. The map on the left shows permit rate by tract, with darker colors representing a higher permit rate. The map on the right shows median income by tract, with darker colors representing higher median income. The two maps show a correlation between higher permit rates and median income in the northeast part of the city, but the southeast area of the city has a high median income and a low permit rate, showing that the two are not always directly correlated.
 
-| ![Solar Permits by Year](solar_permits_by_year.png) | ![Solar Permits by Year and Income Quartile](solar_permits_by_year_income_quartile.png)
+![Climate Resilient Building Permit Locations]("Visualizations/climate_resilient_permits_map.png")
 
-| ![Flood Mitigation Permits by Year](flood_permits_by_year.png) | ![Flood Mitigation Permits by Year and Income Quartile](flood_permits_by_year_income_quartile.png)
+This map shows the location of climate resilient permits throughout Chicago. Many of the flood mitigation and green infrastructure permits are clustered around downtown Chicago and the financial district, but solar permits are more evenly spread out among the city, including among census tracts with lower median income.
 
-| ![Green Infrastructure Permits by Year](green_permits_by_year.png) | ![Green Infrastructure Permits by Year and Income Quartile](green_permits_by_year_income_quartile.png)
+| ![Flood Mitigation Permits by Year]("Visualizations/flood_permits_by_year.png") | ![Flood Mitigation Permits by Year and Income Quartile]("Visualizations/flood_permits_by_year_income_quartile.png")
 
-![Climate Resilient Infrastructure Permits by Year]("../Visualizations/climate_permits_stacked_by_year.png")
+These figures show the number of flood mitigation permits issued per year, and the figure on the right shows a breakdown by income quartile among census tracts where the permit was issued. Flood mitigation permit numbers were the highest around 2018-2021 and have since dipped, but they have remained somewhat evenly distributed for income quartiles over all 20 years.
+
+| ![Green Infrastructure Permits by Year]("Visualizations/green_permits_by_year.png") | ![Green Infrastructure Permits by Year and Income Quartile]("Visualizations/green_permits_by_year_income_quartile.png")
+
+These figures show the number of green infrastructure permits issued per year, and the figure on the right shows a breakdown by income quartile among census tracts where the permit was issued. Green infrastructure permit numbers saw peaks in 2012 and 2015, with a large number of low income permits in 2012. The number of permits issued per year has remained low since 2022. 
+
+| ![Solar Permits by Year]("Visualizations/solar_permits_by_year.png") | ![Solar Permits by Year and Income Quartile]("Visualizations/solar_permits_by_year_income_quartile.png")
+
+These figures show the number of solar permits issued per year, and the figure on the right shows a breakdown by income quartile among census tracts where a permit was issued. Solar permit numbers rose rapidly after 2018, where the Illinois Solar for All and Illinois Shines programs were implemented following the passing of the Future Energy Jobs Act in 2016. The distribution of permits is consistenly evenly disributed by income quartile.
+
+![Climate Resilient Infrastructure Permits by Year]("Visualizations/climate_permits_stacked_by_year.png")
+
+This figure shows the total number of climate resilient permits issued by year, classified by permit type (solar, flood mitigation, and green infrastructure). It is clear that the Future Energy Jobs Act and subsequent programs had a real impact on the number of climate resilient permits being issued by the City of Chicago, and these effects were not just for areas with high median incomes or only for majority white census tracts. The benefits of climate resilient infrastructure can be felt by all thanks to policies and programs that make it easier to incorporate resilience into buildings. 

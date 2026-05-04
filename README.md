@@ -7,9 +7,11 @@ This project examines 2006-2025 building permit data in the City of Chicago to i
 ## Data
 
 The City of Chicago maintains an online dataset with a record for every permit request filed, with information about the address of the property, the name of the person who filed the request, and the type of work that will be done at the property. The dataset ranges from 2006-2026, but for the purposes of this analysis, only 2006-2025 are included as 2026 has incomplete data.
-The dataset used in this project can be found at the [City of Chicago's Data Portal](https://data.cityofchicago.org/Buildings/Building-Permits/ydr8-5enu/about_data).
+The dataset used in this project can be found at the [City of Chicago's Data Portal](https://data.cityofchicago.org/Buildings/Building-Permits/ydr8-5enu/about_data), as can the [City of Chicago boundary](https://data.cityofchicago.org/Facilities-Geographic-Boundaries/Boundaries-City-Map/ewy2-6yfk), which was used for spatial analysis and visualization.
 
 Additionally, Census Bureau data was used for demographic purposes and geospatial visualization. American Community Survey 5-Year Estimates for Cook County (by census tract) with demographic data can be found [here](https://data.census.gov/table?g=050XX00US17031$1400000&y=2024), and cartographic shapefiles for geospatial visualization can be found [here](https://www.census.gov/geographies/mapping-files/time-series/geo/cartographic-boundary.html) on the Census Bureau's website.
+
+
 
 ## Scripts 
 
@@ -61,4 +63,31 @@ This is a QGIS project with layers for census tracts, permit counts, and demogra
 
 ## Results
 
+![Total Building Permits by Year]("../Visualizations/timeseries_total_permits.png")
 
+This figure shows the total building permits by year. Permit requests peaked just before the recession in 2008 and the pandemic in 2020, when development was presumably at its highest volume. 
+
+![Average Building Permit Rate by Income Quartile]("../Visualizations/permit_rate_by_income_quartile.png")
+
+This figure shows the average permit rate per 1,000 residents based on income quartile of a census tract. The highest income quartile tracts have the highest average permit rate at 395.1 permits per 1,000 residents, but the lowest income quartile tracts have the second highest average permit rate at 292.2 permits per 1,000 residents.
+
+![Average Building Permit Rate by Racial Majority of Census Tract]("../Visualizations/permit_rate_by_race.png")
+
+This figure shows the average permit rate per 1,000 residents based on racial majority in a census tract. Mixed race tracts have the highest permit rate at 326.6 permits per 1,000 residents, while majority white and majority Black tracts follow closely behind at 313.1 and 310.4 permits per 1,000 residents respectively. Majority Asian and majority Hispanic tracts have much lower average permit rates.
+
+| ![Median Household Income vs Permit Rate by Census Tract]("../Visualizations/scatter_income_vs_permit_rate.png") | ![Median Household Income vs Permit Rate by Census Tract (without Outliers)]("../Visualizations/scatter_income_vs_permit_rate_no_outliers.png") |
+| ![Poverty Rate vs Permit Rate by Census Tract]("../Visualizations/scatter_poverty_vs_permit_rate.png") | ![Poverty Rate vs Permit Rate by Census Tract]("../Visualizations/scatter_poverty_vs_permit_rate_no_outliers.png") |
+
+These figures are scatter plots showing the correlation between median household income and poverty rates with permit rates by census tract. The two figures on the left are skewed by outlier census tracts (highlighted in red) like those in the Financial District, so the two figures on the right show the plots with the 99th percentile outliers removed. It is easier to then see the clear positive correlation between median household income and permit rate.
+
+| ![Permit Rate by Census Tract]("../Visualizations/permit_rate_tracts.png") | ![Median Income by Census Tract]("../Visualizations/median_income_tracts.png")
+
+![Climate Resilient Building Permit Locations]("../Visualizations/climate_resilient_permits_map.png")
+
+| ![Solar Permits by Year](solar_permits_by_year.png) | ![Solar Permits by Year and Income Quartile](solar_permits_by_year_income_quartile.png)
+
+| ![Flood Mitigation Permits by Year](flood_permits_by_year.png) | ![Flood Mitigation Permits by Year and Income Quartile](flood_permits_by_year_income_quartile.png)
+
+| ![Green Infrastructure Permits by Year](green_permits_by_year.png) | ![Green Infrastructure Permits by Year and Income Quartile](green_permits_by_year_income_quartile.png)
+
+![Climate Resilient Infrastructure Permits by Year]("../Visualizations/climate_permits_stacked_by_year.png")

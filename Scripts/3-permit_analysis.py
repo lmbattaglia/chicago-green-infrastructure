@@ -153,6 +153,7 @@ def plot_permit_trend(permit_flag, permits_df):
     cfg = config[permit_flag]
     year_counts = (
         permits_df[permits_df[permit_flag] == 1]["issue_year"]
+        .astype(int)
         .value_counts()
         .sort_index()
     )
@@ -225,7 +226,7 @@ def plot_permit_trend(permit_flag, permits_df):
     plt.savefig(f"../Visualizations/{cfg['filename']}", dpi=150, bbox_inches='tight')
     plt.show()
     print(f"Saved: {cfg['filename']}")
-    
+       
 # Call function for three datasets
 
 plot_permit_trend('is_solar', permits)

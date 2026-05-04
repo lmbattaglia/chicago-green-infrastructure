@@ -24,7 +24,7 @@ plt.rcParams["figure.dpi"] = 300
 
 # Read permits dataset in
 
-permits = pd.read_csv("chicago_building_permits.csv")
+permits = pd.read_csv("Data/Permit Data/chicago_building_permits.csv")
 
 # Explore permit types 
 
@@ -39,7 +39,7 @@ permits["issue_day"]  = permits["issue_date"].str[8:10]
 
 permits["issue_year"].value_counts(dropna=False)
 
-permits.to_csv("chicago_building_permits.csv")
+permits.to_csv("Data/Permit Data/chicago_building_permits.csv")
 
 # Separate solar projects 
 
@@ -308,11 +308,6 @@ plt.tight_layout()
 plt.savefig("Visualizations/climate_permits_stacked_by_year.png", dpi=150, bbox_inches='tight')
 plt.show()
 
-# Create permit data folder
-
-os.makedirs("Data", exist_ok=True)
-os.makedirs("Data/Permit Data", exist_ok=True)
-
 # Save permit data as CSVs
 
 is_solar_permits.to_csv("Data/Permit Data/solar_permits.csv", index=False)
@@ -336,7 +331,6 @@ solar_geo = load_permit_geodataframe(is_solar_permits)
 flood_geo = load_permit_geodataframe(is_flood_permits)
 green_geo = load_permit_geodataframe(is_green_permits)
 
-os.makedirs("Data/Geodata", exist_ok=True)
 gpkg_path = "Data/Geodata/permits.gpkg"
 
 solar_geo.to_file(gpkg_path, layer="solar", driver="GPKG")

@@ -131,7 +131,7 @@ cook_demo['pct_no_hs'] = 1 - (
 # Set index of df to be names, write out to CSV file
 
 cook_demo.setindex = cook_demo["NAME"]
-cook_demo.to_csv('chicago_census_data.csv',index=False)
+cook_demo.to_csv('Data/Census Data/chicago_census_data.csv',index=False)
 
 
 

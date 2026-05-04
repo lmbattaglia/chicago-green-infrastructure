@@ -20,7 +20,7 @@ os.makedirs("Visualizations", exist_ok=True)
 
 # Census demographic data
 
-demos = pd.read_csv("chicago_census_data.csv", dtype={"GEOID": str})
+demos = pd.read_csv("Data/Census Data/chicago_census_data.csv", dtype={"GEOID": str})
 demos = demos.replace(-666666666, np.nan)
 
 # Geopackage layers
@@ -30,9 +30,69 @@ geo_clip    = gpd.read_file("Data/Geodata/chicago.gpkg", layer="census_tracts")
 
 # Building permits
 
-permits = pd.read_csv("chicago_building_permits.csv", dtype={"id": str}, low_memory=False)
+permits = pd.read_csv("Data/Census Data/chicago_building_permits.csv", dtype={"id": str}, low_memory=False)
 permits = permits.replace(-666666666, np.nan)
 permits = permits[permits['issue_year'] < 2026]
+
+# Read building permits, convert to geodataframe using lat/lon
+
+utm18n = 26918
+permits = pd.read_csv("Data/Permit Data/chicago_building_permits.csv", dtype={"id": str})
+permits = permits.dropna(subset=["xcoordinate", "ycoordinate"])
+permits_geo = gpd.GeoDataFrame(
+    permits,
+    geometry=gpd.points_from_xy(permits["xcoordinate"], permits["ycoordinate"]),
+    crs="EPSG:3435"
+).to_crs(epsg=utm18n)
+
+# Spatial join permits to census tracts to get GEOID on each permit
+
+permits_with_tract = gpd.sjoin(
+    permits_geo[['id', 'issue_year', 'geometry']],
+    geo_clip[['GEOID', 'geometry']],
+    how='inner',
+    predicate='within'
+)
+print(f"Permits matched to census tracts: {len(permits_with_tract):,}")
+
+# Count total permits by year directly
+
+permits_by_year = (
+    permits_with_tract
+    .groupby('issue_year')
+    .size()
+    .reset_index(name='permit_count')
+)
+
+# Create bar chart of permit counts by year
+
+fig, ax = plt.subplots(figsize=(12, 5), dpi=150)
+ax.bar(
+    permits_by_year['issue_year'],
+    permits_by_year['permit_count'],
+    color='gray',
+    width=0.9,
+    label='Total Permits'
+)
+for _, row in permits_by_year.iterrows():
+    ax.annotate(
+        f"{int(row['permit_count']):,}",
+        xy=(row['issue_year'], row['permit_count']),
+        xytext=(0, 8),
+        textcoords='offset points',
+        ha='center',
+        fontsize=7
+    )
+ax.set_title('Total Building Permits by Year', fontsize=13, pad=12)
+ax.set_xlabel('Year', fontsize=10)
+ax.set_ylabel('Total Permits', fontsize=10)
+ax.set_xticks(permits_by_year['issue_year'])
+ax.tick_params(axis='x', rotation=45)
+ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{int(x):,}'))
+ax.set_ylim(0, 55000)
+plt.tight_layout()
+plt.savefig('Visualizations/timeseries_total_permits.png', dpi=150, bbox_inches='tight')
+plt.show()
 
 # Bin tracts by income quartile
 

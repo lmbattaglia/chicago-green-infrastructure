@@ -14,12 +14,12 @@ import numpy as np
 
 # Read shapefile into variable, filter to Cook County
 
-geodata = gpd.read_file("Data/Geodata/cb_2024_17_tract_500k.zip")
+geodata = gpd.read_file("../Data/Geodata/cb_2024_17_tract_500k.zip")
 geodata = geodata.query('COUNTYFP == "031"')
 
 # Read census data into file
 
-demos = pd.read_csv("Data/Census Data/chicago_census_data.csv", dtype={"GEOID": str})
+demos = pd.read_csv("../Data/Census Data/chicago_census_data.csv", dtype={"GEOID": str})
 
 # Replace Census sentinel value with NaN
 demos = demos.replace(-666666666, np.nan)
@@ -35,11 +35,11 @@ geodata.drop(columns='_merge',inplace=True)
 
 # Write geodata to geopackage file
 
-geodata.to_file("Data/Geodata/tracts.gpkg",layer="")
+geodata.to_file("../Data/Geodata/tracts.gpkg",layer="")
 
 # Read chicago city boundary into shapefile
 
-boundary = gpd.read_file("Data/Geodata/chicago_city_boundary.zip")
+boundary = gpd.read_file("../Data/Geodata/chicago_city_boundary.zip")
 
 # Set up projection number
 
@@ -58,7 +58,7 @@ print(f"After clip:  {len(geo_clip)} tracts")
 
 # Read building permits, convert to geodataframe using lat/lon
 
-permits = pd.read_csv("Data/Permit Data/chicago_building_permits.csv", dtype={"id": str})
+permits = pd.read_csv("../Data/Permit Data/chicago_building_permits.csv", dtype={"id": str})
 permits = permits.dropna(subset=["xcoordinate", "ycoordinate"])
 permits_geo = gpd.GeoDataFrame(
     permits,
@@ -92,7 +92,7 @@ geo_clip = geo_clip.drop(columns=[c for c in cols_to_drop if c in geo_clip.colum
 
 # Export all three layers to a single geopackage
 
-gpkg_path = "Data/Geodata/chicago.gpkg"
+gpkg_path = "../Data/Geodata/chicago.gpkg"
 boundary.to_file(gpkg_path, layer="city_boundary", driver="GPKG")
 geo_clip.to_file(gpkg_path, layer="census_tracts", driver="GPKG")
 tract_centroids = geo_clip[['GEOID', 'permit_count']].copy()

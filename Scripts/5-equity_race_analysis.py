@@ -14,30 +14,30 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 import os
-os.makedirs("Visualizations", exist_ok=True)
+os.makedirs("../Visualizations", exist_ok=True)
 
 # Read needed files 
 
 # Census demographic data
 
-demos = pd.read_csv("Data/Census Data/chicago_census_data.csv", dtype={"GEOID": str})
+demos = pd.read_csv("../Data/Census Data/chicago_census_data.csv", dtype={"GEOID": str})
 demos = demos.replace(-666666666, np.nan)
 
 # Geopackage layers
 
-boundary    = gpd.read_file("Data/Geodata/chicago.gpkg", layer="city_boundary")
-geo_clip    = gpd.read_file("Data/Geodata/chicago.gpkg", layer="census_tracts")
+boundary    = gpd.read_file("../Data/Geodata/chicago.gpkg", layer="city_boundary")
+geo_clip    = gpd.read_file("../Data/Geodata/chicago.gpkg", layer="census_tracts")
 
 # Building permits
 
-permits = pd.read_csv("Data/Census Data/chicago_building_permits.csv", dtype={"id": str}, low_memory=False)
+permits = pd.read_csv("../Data/Permit Data/chicago_building_permits.csv", dtype={"id": str}, low_memory=False)
 permits = permits.replace(-666666666, np.nan)
 permits = permits[permits['issue_year'] < 2026]
 
 # Read building permits, convert to geodataframe using lat/lon
 
 utm18n = 26918
-permits = pd.read_csv("Data/Permit Data/chicago_building_permits.csv", dtype={"id": str})
+permits = pd.read_csv("../Data/Permit Data/chicago_building_permits.csv", dtype={"id": str})
 permits = permits.dropna(subset=["xcoordinate", "ycoordinate"])
 permits_geo = gpd.GeoDataFrame(
     permits,
@@ -91,7 +91,7 @@ ax.tick_params(axis='x', rotation=45)
 ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{int(x):,}'))
 ax.set_ylim(0, 55000)
 plt.tight_layout()
-plt.savefig('Visualizations/timeseries_total_permits.png', dpi=150, bbox_inches='tight')
+plt.savefig('../Visualizations/timeseries_total_permits.png', dpi=150, bbox_inches='tight')
 plt.show()
 
 # Bin tracts by income quartile
@@ -132,7 +132,7 @@ ax.set_ylabel('Permits per 1,000 Residents', fontsize=10)
 ax.set_ylim(0, quartile_permits['permit_rate'].max() * 1.2)
 
 plt.tight_layout()
-plt.savefig('Visualizations/permit_rate_by_income_quartile.png', dpi=150, bbox_inches='tight')
+plt.savefig('../Visualizations/permit_rate_by_income_quartile.png', dpi=150, bbox_inches='tight')
 plt.show()
 
 # Create bar chart: permit rate by racial majority tract
@@ -209,7 +209,7 @@ ax.set_ylim(0, race_permits['permit_rate'].max() * 1.2)
 ax.tick_params(axis='x', labelsize=9)
 
 plt.tight_layout()
-plt.savefig('Visualizations/permit_rate_by_race.png', dpi=150, bbox_inches='tight')
+plt.savefig('../Visualizations/permit_rate_by_race.png', dpi=150, bbox_inches='tight')
 plt.show()
 
 # Create scatter plot: median income vs permit rate
@@ -260,7 +260,7 @@ ax.xaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f'${int(x):,}'))
 ax.legend(fontsize=9)
 
 plt.tight_layout()
-plt.savefig('Visualizations/scatter_income_vs_permit_rate.png', dpi=150, bbox_inches='tight')
+plt.savefig('../Visualizations/scatter_income_vs_permit_rate.png', dpi=150, bbox_inches='tight')
 plt.show()
 
 # Create scatterplot of poverty rate vs permit rate
@@ -309,7 +309,7 @@ ax.xaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f'{x:.0f}%'))
 ax.legend(fontsize=9)
 
 plt.tight_layout()
-plt.savefig('Visualizations/scatter_poverty_vs_permit_rate.png', dpi=150, bbox_inches='tight')
+plt.savefig('../Visualizations/scatter_poverty_vs_permit_rate.png', dpi=150, bbox_inches='tight')
 plt.show()
 
 # ------------- No Outliers ---------------
@@ -354,7 +354,7 @@ ax.xaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f'${int(x):,}'))
 ax.legend(fontsize=9)
 
 plt.tight_layout()
-plt.savefig('Visualizations/scatter_income_vs_permit_rate_no_outliers.png',   
+plt.savefig('../Visualizations/scatter_income_vs_permit_rate_no_outliers.png',   
             dpi=150, bbox_inches='tight')
 plt.show()
 
@@ -394,7 +394,7 @@ ax.xaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f'{x:.0f}%'))
 ax.legend(fontsize=9)
 
 plt.tight_layout()
-plt.savefig('Visualizations/scatter_poverty_vs_permit_rate_no_outliers.png',  
+plt.savefig('../Visualizations/scatter_poverty_vs_permit_rate_no_outliers.png',  
             dpi=150, bbox_inches='tight')
 plt.show()
 
@@ -487,15 +487,15 @@ def plot_permits_by_income_quartile(gdf, permit_type, geo_clip):
     ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{int(x):,}'))
 
     plt.tight_layout()
-    plt.savefig(f'Visualizations/{cfg["filename"]}', dpi=150, bbox_inches='tight')
+    plt.savefig(f'../Visualizations/{cfg["filename"]}', dpi=150, bbox_inches='tight')
     plt.show()
     print(f"Saved: {cfg['filename']}")
     
 # Read gpkg layers and call function 
 
-solar_geo = gpd.read_file("Data/Geodata/permits.gpkg", layer="solar")
-flood_geo = gpd.read_file("Data/Geodata/permits.gpkg", layer="flood")
-green_geo = gpd.read_file("Data/Geodata/permits.gpkg", layer="green")
+solar_geo = gpd.read_file("../Data/Geodata/permits.gpkg", layer="solar")
+flood_geo = gpd.read_file("../Data/Geodata/permits.gpkg", layer="flood")
+green_geo = gpd.read_file("../Data/Geodata/permits.gpkg", layer="green")
 
 plot_permits_by_income_quartile(solar_geo, 'solar', geo_clip)
 plot_permits_by_income_quartile(flood_geo, 'flood', geo_clip)

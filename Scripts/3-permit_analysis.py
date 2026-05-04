@@ -16,7 +16,7 @@ import os
 
 # Create folder for visualizations if it doesn't exist
 
-os.makedirs("Visualizations", exist_ok=True)
+os.makedirs("../Visualizations", exist_ok=True)
 
 # Set default plot params
 
@@ -24,7 +24,7 @@ plt.rcParams["figure.dpi"] = 300
 
 # Read permits dataset in
 
-permits = pd.read_csv("Data/Permit Data/chicago_building_permits.csv")
+permits = pd.read_csv("../Data/Permit Data/chicago_building_permits.csv")
 
 # Explore permit types 
 
@@ -39,7 +39,7 @@ permits["issue_day"]  = permits["issue_date"].str[8:10]
 
 permits["issue_year"].value_counts(dropna=False)
 
-permits.to_csv("Data/Permit Data/chicago_building_permits.csv")
+permits.to_csv("../Data/Permit Data/chicago_building_permits.csv")
 
 # Separate solar projects 
 
@@ -222,7 +222,7 @@ def plot_permit_trend(permit_flag, permits_df):
     ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{int(x):,}'))
 
     plt.tight_layout()
-    plt.savefig(f"Visualizations/{cfg['filename']}", dpi=150, bbox_inches='tight')
+    plt.savefig(f"../Visualizations/{cfg['filename']}", dpi=150, bbox_inches='tight')
     plt.show()
     print(f"Saved: {cfg['filename']}")
     
@@ -305,14 +305,14 @@ ax.legend(title='Permit Type', fontsize=9, title_fontsize=9)
 ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{int(x):,}'))
 
 plt.tight_layout()
-plt.savefig("Visualizations/climate_permits_stacked_by_year.png", dpi=150, bbox_inches='tight')
+plt.savefig("../Visualizations/climate_permits_stacked_by_year.png", dpi=150, bbox_inches='tight')
 plt.show()
 
 # Save permit data as CSVs
 
-is_solar_permits.to_csv("Data/Permit Data/solar_permits.csv", index=False)
-is_flood_permits.to_csv("Data/Permit Data/flood_permits.csv", index=False)
-is_green_permits.to_csv("Data/Permit Data/green_permits.csv", index=False)
+is_solar_permits.to_csv("../Data/Permit Data/solar_permits.csv", index=False)
+is_flood_permits.to_csv("../Data/Permit Data/flood_permits.csv", index=False)
+is_green_permits.to_csv("../Data/Permit Data/green_permits.csv", index=False)
 
 # Save permit data as geopandas
 
@@ -331,7 +331,7 @@ solar_geo = load_permit_geodataframe(is_solar_permits)
 flood_geo = load_permit_geodataframe(is_flood_permits)
 green_geo = load_permit_geodataframe(is_green_permits)
 
-gpkg_path = "Data/Geodata/permits.gpkg"
+gpkg_path = "../Data/Geodata/permits.gpkg"
 
 solar_geo.to_file(gpkg_path, layer="solar", driver="GPKG")
 flood_geo.to_file(gpkg_path, layer="flood", driver="GPKG")

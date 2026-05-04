@@ -21,10 +21,10 @@ import os
 
 # Create folder and subfolders for data if it doesn't exist
 
-os.makedirs("Data", exist_ok=True)
-os.makedirs("Data/Geodata", exist_ok=True)
-os.makedirs("Data/Census Data", exist_ok=True)
-os.makedirs("Data/Permit Data", exist_ok=True)
+os.makedirs("../Data", exist_ok=True)
+os.makedirs("../Data/Geodata", exist_ok=True)
+os.makedirs("../Data/Census Data", exist_ok=True)
+os.makedirs("../Data/Permit Data", exist_ok=True)
 
 # Identify desired variables
 
@@ -53,13 +53,13 @@ dataset_id = "ydr8-5enu"
 # Read app token (from City of Chicago website) with username and password into file
 
     
-with open("apptoken.txt") as fh:
+with open('../apptoken.txt') as fh:
     apptoken = fh.readline().strip()
     
-with open('username.txt') as fh:
+with open('../username.txt') as fh:
     username = fh.readline().strip()  
 
-with open('password.txt') as fh:
+with open('../password.txt') as fh:
     password = fh.readline().strip()
 
 # Use city resource example authenticated client (needed for non-public datasets) to pull this dataset
@@ -113,7 +113,7 @@ df = pd.DataFrame.from_records(all_records)
 
 df = df.dropna(subset=['work_description'])
 
-df.to_csv("Data/Permit Data/chicago_building_permits.csv", index=False)
+df.to_csv("../Data/Permit Data/chicago_building_permits.csv", index=False)
 print(f"\nDone! {len(df):,} total rows, {len(df.columns)} columns saved to chicago_building_permits.csv")
 print(f"Columns: {list(df.columns)}")
 
@@ -157,7 +157,7 @@ meta_rows = [
     if field in col_meta
 ]
 
-pd.DataFrame(meta_rows).to_csv("Data/Permit Data/chicago_building_permits_metadata.csv", index=False)
+pd.DataFrame(meta_rows).to_csv("../Data/Permit Data/chicago_building_permits_metadata.csv", index=False)
 
 
 
